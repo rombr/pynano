@@ -1,0 +1,130 @@
+﻿<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="ru"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7" lang="ru"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="ru"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ru"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% block shorttitle %}{% endblock %} | RBK Card{% endblock %}</title>
+  <meta name="description" content="{% block description %}{% endblock %}">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="/static/css/screen.css">
+</head>
+<body>
+  <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+<div class="wrapper">
+  <div id="header">
+	<div id="nav">
+		<a href="/" id="logo"></a>
+		<ul>
+			<li>
+				<a class="{% block about_active_menu %}{% endblock %}" href="{{ urls.about }}">О сервисе</a>
+			</li>
+			<li>
+				<a class="{% block cost_active_menu %}{% endblock %}" href="{{ urls.cost }}">Стоимость</a>
+			</li>
+			<li>
+				<a class="{% block security_active_menu %}{% endblock %}" href="{{ urls.security }}">Безопасность</a>
+			</li>
+			<li>
+				<a class="{% block help_active_menu %}{% endblock %}" href="{{ urls.help }}">Помощь</a>
+			</li>
+		</ul>
+		<a href="https://pos.acceptcards.ru/" id="enter">Войти</a>
+	</div>
+	<div class="clearfix"></div>
+	<div id="title">
+		Начните принимать банковские карты <span class="color">прямо сейчас!</span>
+	</div>
+	<div id="join">
+		<form method="post" action="https://pos.acceptcards.ru/registration/">
+			<input type="text" id="email" name="email" placeholder="Введите Ваш e-mail"><input type="submit" value="Присоединиться">
+		</form>
+	</div>
+	<div class="clearfix"></div>
+	<div id="iphone"></div>
+  </div>
+  <div id="content" role="main">
+  	{% block content %}
+			
+	{% endblock %}	
+  </div>
+  <div id="footer">
+	<div class="footer-part">
+		<div id="logo-footer"></div>
+		<span class="copyrights">&copy; 2012 Холдинг РБК. <br>Все права защищены</span>
+	</div>
+	<div class="footer-part">
+		<h3>RBK Card</h3>
+		<ul>
+			<li>
+				<a href="{{ urls.about }}">О сервисе</a>
+			</li>
+			<li>
+				<a href="{{ urls.cost }}">Стоимость</a>
+			</li>
+			<li>
+				<a href="{{ urls.security }}">Безопасность</a>
+			</li>
+			<li>
+				<a href="{{ urls.help }}">Помощь</a>
+			</li>
+		</ul>
+	</div>
+	<div class="footer-part">
+		<h3>Связаться с нами</h3>
+		<ul>
+			<li>
+				<a target="_blank" href="https://server.iad.liveperson.net/hc/90049474/?cmd=file&file=visitorWantsToChat&site=90049474&byhref=1" onclick="window.open('https://server.iad.liveperson.net/hc/90049474/?cmd=file&file=visitorWantsToChat&site=90049474&byhref=1&imageUrl=http://www.rbkmoney.ru/timpani', 'popup', 'width=566,height=306,toolbar=0,location=0,directories=0,menubar=0,scrollbars=0,resizable=0,status=0');return false;">Онлайн-чат</a>
+			</li>
+			<li>
+				<a href="https://pos.acceptcards.ru/feedback/rbkcard/">Написать письмо</a>
+			</li>
+			<li>
+				8-800-200-88-20
+			</li>
+		</ul>
+		<span class="description">(звонок по России бесплатный)</span>
+	</div>
+	<div class="footer-part footer-part-last">
+		<div id="soc-icons">
+			<a target="_blank" class="soc-f" href="http://www.facebook.com/pages/RBK-Card/360039114038582"></a>
+			<a target="_blank" class="soc-t" href="http://twitter.com/RBKCard"></a>
+			<a target="_blank" class="soc-g" href="http://blog.rbkmoney.ru/"></a>
+			<a target="_blank" class="soc-v" href="http://vk.com/rbkcard"></a>
+		</div>
+		<a target="_blank" href="http://www.rbkmoney.ru/business">RBK Money для бизнеса</a>
+	</div>
+  </div>
+</div>
+
+  <script src="/static/js/libs/jquery-1.7.2.min.js"></script>
+  <script src="/static/js/jquery.desart.accordion-2.0.js"></script>
+  
+  <script src="/static/js/script.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#content').accordion_desart({
+            accordionContainer: "#content",
+            accordionTitle: ".acc-pseudo",
+            accordionHidden: ".acc-hidden",
+            hideOther: "no",
+            hideClicking: "yes"
+        });
+    });
+  </script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3862822-14']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

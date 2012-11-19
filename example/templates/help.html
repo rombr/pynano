@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block shorttitle %}Помощь{% endblock %}
+
+{% block help_active_menu %}active{% endblock %}
+
+{% block description %}Круглосуточная техническая поддержка по вопросам работы сервиса RBK Card. Онлайн чат{% endblock %}
+
+{% block content %}
+<h1>Помощь</h1>  
+	<p>По любым вопросам работы сервиса RBK Card обращайтесь к специалистам нашего центра технической поддержки, который работает круглосуточно. Выберите удобный способ связи:</p>
+	<ul>
+		<li><a href="https://server.iad.liveperson.net/hc/90049474/?cmd=file&file=visitorWantsToChat&site=90049474&byhref=1" onClick="window.open('https://server.iad.liveperson.net/hc/90049474/?cmd=file&file=visitorWantsToChat&site=90049474&byhref=1&imageUrl=http://www.rbkmoney.ru/timpani', 'popup', 'width=566,height=306,toolbar=0,location=0,directories=0,menubar=0,scrollbars=0,resizable=0,status=0');return false;">Онлайн-чат</a></li>
+		<li>E-mail: <a href="mailto:support@rbkmoney.ru?subject=support RBK Card">support@rbkmoney.ru</a></li>
+		<li>Телефоны: <span class="color">+7 (495) 648-68-58, 8-800-200-88-20</span> (звонок по России бесплатный)</li>
+	</ul>
+	<p>Возможно, для решения вашей проблемы услуги техподдержки не потребуются: загляните в наш <a href="{{ urls.faq }}">список частых вопросов и ответов</a>.</p>		
+		
+{% endblock %}

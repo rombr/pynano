@@ -1,0 +1,38 @@
+[
+ {
+  "url": "/", 
+  "page_id": "index", 
+  "context": {}, 
+  "template": "index.html"
+ }, 
+ {
+  "url": "/about/", 
+  "page_id": "about", 
+  "context": {}, 
+  "template": "about.html"
+ }, 
+ {
+  "url": "/cost/", 
+  "page_id": "cost", 
+  "context": {}, 
+  "template": "cost.html"
+ }, 
+ {
+  "url": "/security/", 
+  "page_id": "security", 
+  "context": {}, 
+  "template": "security.html"
+ }, 
+ {
+  "url": "/help/", 
+  "page_id": "help", 
+  "context": {}, 
+  "template": "help.html"
+ }, 
+ {
+  "url": "/faq/", 
+  "page_id": "faq", 
+  "context": {}, 
+  "template": "faq.html"
+ }
+]
