@@ -35,4 +35,6 @@ nosetests.xml
 .pydevproject
 .settings
  *.log
- 
+
+MANIFEST
+site_static

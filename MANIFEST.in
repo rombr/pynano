@@ -2,6 +2,4 @@ include README.rst
 include MANIFEST.in
 recursive-exclude * __pycache__
 recursive-exclude * env/
-recursive-exclude * settings_local.py
-recursive-exclude * settings_production.py
 recursive-exclude * *.py[co]
