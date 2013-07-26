@@ -52,7 +52,7 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
 
 setup(
     name="PyNanoCMS",
-    version='0.2',
+    version='0.2.1',
     url='https://github.com/rombr/pynano',
     author='Roman Bondar',
     author_email='rombr5@gmail.com',
@@ -63,15 +63,13 @@ setup(
     scripts=['pynano/pynano.py', ],
     install_requires=['jinja2'],
     classifiers=[
-        # 'Development Status :: 5 - Production/Stable',
-        # 'Environment :: Web Environment',
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: BSD License',
+        'Environment :: Web Environment',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        # 'Topic :: Internet :: WWW/HTTP',
-        # 'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        # 'Topic :: Internet :: WWW/HTTP :: WSGI',
-        # 'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Internet :: WWW/HTTP',
    ],
 )

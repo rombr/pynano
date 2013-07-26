@@ -4,13 +4,10 @@
 Generate static HTML
 '''
 import os, logging, json
-from distutils.dir_util import copy_tree
-from distutils.errors import DistutilsFileError
 from md5 import md5
 
-from django.conf import settings
-from django import template
-from django.template import Context, loader
+from distutils.dir_util import copy_tree
+from distutils.errors import DistutilsFileError
 
 from jinja2 import Environment, FileSystemLoader, Template
 
@@ -27,7 +24,6 @@ logger.addHandler(handler)
 logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
 
-
 PROJECT_ROOT = os.path.realpath(os.path.dirname('.'))  # __file__))
 prjpath = lambda * args: os.path.realpath(os.path.join(PROJECT_ROOT, *args))
 
@@ -38,56 +34,24 @@ PAGES_JSON = prjpath('pages.json')
 
 STATIC_HTML_DIR = prjpath('site_static/')
 
-PAGES = [
-    {
-    'page_id': 'index',
-    'url': '/',
-    'template': 'index.html',
-    'context': {},
-    },
-    {
-    'page_id': 'about',
-    'url': '/about/',
-    'template': 'about.html',
-    'context': {},
-    },
-    {
-    'page_id': 'faq_sub',
-    'url': '/faq/дом.html',
-    'template': 'faq.html',
-    'context': {},
-    },
-]
-
-# if __name__ == "__main__":
-#    open(PAGES_JSON, 'w').write(json.dumps(PAGES,indent=True))
-
 
 class GenHTML(object):
-    def __init__(self, template_dir=None, static_html_dir=None, static_dir=None, other_dir=None):
+    def __init__(self, template_dir=None, static_html_dir=None,
+                 static_dir=None, other_dir=None):
         self.template_dir = os.path.realpath(os.path.dirname(template_dir)) or None
         self.static_dir = os.path.realpath(os.path.dirname(static_dir)) or None
         self.static_html_dir = os.path.realpath(os.path.dirname(static_html_dir)) or None
         self.other_dir = os.path.realpath(os.path.dirname(other_dir)) or None
 
-        settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=(self.template_dir,))
-
     def render(self, template_path=None, template_string=None, context=None):
         '''
-        render page with Django templates
+        render page with templates
         '''
-        context = context or {}
-
-        if template_string:
-            t = template.Template(template_string)
-        elif template_path:
-            t = loader.get_template(template_path)
-        else:
-            return ''
-        return t.render(Context(context))
+        raise  NotImplementedError()
 
     def load_template(self, path):
         '''
+        Load template file
         '''
         if self.template_dir:
             full_path = os.path.realpath(os.path.join(self.template_dir, path))
@@ -97,11 +61,13 @@ class GenHTML(object):
 
     def render_file(self, file_path, context=None):
         '''
+        Render template
         '''
         return self.render(template_string=self.load_template(file_path), context=context)
 
     def save_HTML_file(self, data, addr):
         '''
+        Save generated HTML
         '''
         if addr.startswith('/'): addr = addr[1:]
         if not addr.endswith('.html') and not addr.endswith('/') and len(addr) > 1: addr = addr + '/'
@@ -143,6 +109,7 @@ class GenHTML(object):
 
     def generate(self, pages=None):
         '''
+        Common entry point
         '''
         pages = pages or []
         urls = [(i['page_id'], i['url'],) for i in pages]
@@ -172,16 +139,17 @@ class GenHTMLJinja2(GenHTML):
 
 
 if __name__ == "__main__":
+    # open(PAGES_JSON, 'w').write(json.dumps(PAGES,indent=True))
     try:
         if not TEMPLATE_DIR and not STATIC_HTML_DIR:
             raise Exception('Need TEMPLATE_DIR and STATIC_HTML_DIR')
 
         gen_html = GenHTMLJinja2(
-                                 template_dir=TEMPLATE_DIR + '/',
-                                 static_html_dir=STATIC_HTML_DIR + '/',
-                                 static_dir=STATIC_DIR + '/',
-                                 other_dir=OTHER_DIR + '/'
-                                 )
+            template_dir=TEMPLATE_DIR + '/',
+            static_html_dir=STATIC_HTML_DIR + '/',
+            static_dir=STATIC_DIR + '/',
+            other_dir=OTHER_DIR + '/'
+        )
 
         pages = json.load(open(PAGES_JSON, 'r'))
 
