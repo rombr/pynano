@@ -17,18 +17,17 @@ from distutils.errors import DistutilsFileError
 
 from jinja2 import Environment, FileSystemLoader, Template
 
+
 logger = logging.getLogger('pyNanoCMS')
-# Создать обработчик консоли
 handler = logging.StreamHandler()
 file_handler = logging.FileHandler('pynano.log', 'w')
-# Создать форматирование и настроить обработчик на его использование
 formatter = logging.Formatter("%(asctime)s ::%(name)s::%(levelname)s:: %(message)s")
 handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
-# Добавить обработчик к модулю ведения журнала
 logger.addHandler(handler)
 logger.addHandler(file_handler)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
+
 
 PROJECT_ROOT = os.path.realpath(os.path.dirname('.'))  # __file__))
 prjpath = lambda * args: os.path.realpath(os.path.join(PROJECT_ROOT, *args))
@@ -145,7 +144,9 @@ class GenHTMLJinja2(GenHTML):
 
 
 def generate():
-    # open(PAGES_JSON, 'w').write(json.dumps(PAGES,indent=True))
+    '''
+    Generate static site
+    '''
     try:
         if not TEMPLATE_DIR and not STATIC_HTML_DIR:
             raise Exception('Need TEMPLATE_DIR and STATIC_HTML_DIR')
@@ -167,23 +168,40 @@ def generate():
 
 
 def file_filter(name):
-    return (not name.startswith(".")) and (not name.endswith(".swp"))
+    '''
+    Filter for unnecessary files
+    '''
+    return (not name.endswith(".log")
+            and
+            not name.endswith(".swp")
+            and
+            not name.startswith(".")
+            )
 
 
-def file_times(path):
-    for top_level in filter(file_filter, os.listdir(path)):
-        for root, dirs, files in os.walk(top_level):
+def file_times(path, static_html_dir):
+    '''
+    Generator for modified time of files
+    '''
+    for root, dirs, files in os.walk(path):
+        if static_html_dir not in root:
             for file in filter(file_filter, files):
                 yield os.stat(os.path.join(root, file)).st_mtime
 
 
 def print_stdout(process):
+    '''
+    Print outs of process
+    '''
     stdout = process.stdout
     if stdout != None:
         print stdout
 
 
-def autoreload(command, monitoring_path):
+def autoreload(command, monitoring_path, static_html_dir):
+    '''
+    Auto regerate site when some source file was changed
+    '''
     # How often we check the filesystem for changes (in seconds)
     wait = 1
 
@@ -191,14 +209,14 @@ def autoreload(command, monitoring_path):
     process = subprocess.Popen(command, shell=True)
 
     # The current maximum file modified time under the watched directory
-    last_mtime = max(file_times(monitoring_path))
+    last_mtime = max(file_times(monitoring_path, static_html_dir))
 
     while True:
-        max_mtime = max(file_times(monitoring_path))
+        max_mtime = max(file_times(monitoring_path, static_html_dir))
         print_stdout(process)
         if max_mtime > last_mtime:
             last_mtime = max_mtime
-            logger.info('Restarting process.')
+            # logger.info('Restarting process.')
             # process.kill()
             logger.info('Regenerating site...')
             generate()
@@ -218,7 +236,8 @@ if __name__ == "__main__":
         generate()
         logger.info('Start serve...')
         os.chdir(STATIC_HTML_DIR)
-        autoreload('python -m SimpleHTTPServer 8000', PROJECT_ROOT)
+        autoreload('python -m SimpleHTTPServer 8000',
+                   PROJECT_ROOT, STATIC_HTML_DIR)
 
     else:
         logger.info('Generating site...')
