@@ -1,13 +1,13 @@
 [
  {
   "url": "/", 
-  "page_id": "index", 
-  "context": {}, 
+  "page_id": "index",
+  "context": {},
   "template": "index.html"
  }, 
  {
   "url": "/about/", 
-  "page_id": "about", 
+  "page_id": "about",  
   "context": {}, 
   "template": "about.html"
  }, 

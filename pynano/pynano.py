@@ -3,8 +3,14 @@
 '''
 Generate static HTML
 '''
-import os, logging, json
+import os
+import sys
+import subprocess
+import time
+import logging
+import json
 from md5 import md5
+import argparse
 
 from distutils.dir_util import copy_tree
 from distutils.errors import DistutilsFileError
@@ -138,7 +144,7 @@ class GenHTMLJinja2(GenHTML):
         return template.render(**context)
 
 
-if __name__ == "__main__":
+def generate():
     # open(PAGES_JSON, 'w').write(json.dumps(PAGES,indent=True))
     try:
         if not TEMPLATE_DIR and not STATIC_HTML_DIR:
@@ -158,3 +164,62 @@ if __name__ == "__main__":
         gen_html.copy_other()
     except Exception as e:
         logger.error(e, exc_info=1, extra={})
+
+
+def file_filter(name):
+    return (not name.startswith(".")) and (not name.endswith(".swp"))
+
+
+def file_times(path):
+    for top_level in filter(file_filter, os.listdir(path)):
+        for root, dirs, files in os.walk(top_level):
+            for file in filter(file_filter, files):
+                yield os.stat(os.path.join(root, file)).st_mtime
+
+
+def print_stdout(process):
+    stdout = process.stdout
+    if stdout != None:
+        print stdout
+
+
+def autoreload(command, monitoring_path):
+    # How often we check the filesystem for changes (in seconds)
+    wait = 1
+
+    # The process to autoreload
+    process = subprocess.Popen(command, shell=True)
+
+    # The current maximum file modified time under the watched directory
+    last_mtime = max(file_times(monitoring_path))
+
+    while True:
+        max_mtime = max(file_times(monitoring_path))
+        print_stdout(process)
+        if max_mtime > last_mtime:
+            last_mtime = max_mtime
+            logger.info('Restarting process.')
+            # process.kill()
+            logger.info('Regenerating site...')
+            generate()
+            # process = subprocess.Popen(command, shell=True)
+        time.sleep(wait)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', "--serve",
+                        help="serve in real time",
+                        action="store_true")
+    args = parser.parse_args()
+
+    if args.serve:
+        logger.info('Generating site...')
+        generate()
+        logger.info('Start serve...')
+        os.chdir(STATIC_HTML_DIR)
+        autoreload('python -m SimpleHTTPServer 8000', PROJECT_ROOT)
+
+    else:
+        logger.info('Generating site...')
+        generate()
