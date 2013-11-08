@@ -38,3 +38,5 @@ nosetests.xml
 
 MANIFEST
 site_static
+env
+*.log
