@@ -60,7 +60,7 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
 
 setup(
     name="PyNanoCMS",
-    version='0.2.4',
+    version='0.2.5',
     url='https://github.com/rombr/pynano',
     author='Roman Bondar',
     author_email='rombr5@gmail.com',
