@@ -80,7 +80,10 @@ class GenHTML(object):
         if addr.startswith('/'):
             addr = addr[1:]
 
-        if not addr.endswith('.html') and not addr.endswith('/') and len(addr) > 1:
+        if (not addr.endswith('.html')
+                and '.' not in addr  # file extension
+                and not addr.endswith('/')
+                and len(addr) > 1):
             addr = addr + '/'
 
         if addr.endswith('/') or not addr:
@@ -177,7 +180,13 @@ class GenHTML(object):
             logger.info('Removing trash files:')
             for i in trash:
                 logger.info('\t%s' % i)
-                os.unlink(os.path.join(self.static_html_dir, i[1:]))
+                f_name = os.path.join(self.static_html_dir, i[1:])
+                f_dir = os.path.dirname(f_name)
+                os.unlink(f_name)
+
+                if not os.listdir(f_dir):
+                    logger.info('\t Removing empty dir: %s' % f_dir)
+                    os.rmdir(f_dir)
             logger.info('%d trash files was removed!' % len(trash))
 
 
