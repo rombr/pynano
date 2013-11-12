@@ -5,7 +5,12 @@ Created on 25.07.2013
 
 @author: rombr
 '''
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+
 from distutils.command.install import INSTALL_SCHEMES
 import os
 
@@ -52,7 +57,7 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
 
 setup(
     name="PyNanoCMS",
-    version='0.2.1',
+    version='0.2.3',
     url='https://github.com/rombr/pynano',
     author='Roman Bondar',
     author_email='rombr5@gmail.com',
