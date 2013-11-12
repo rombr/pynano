@@ -4,6 +4,9 @@
 Created on 25.07.2013
 
 @author: rombr
+
+Deploy:
+setup.py sdist upload
 '''
 try:
     from setuptools import setup
@@ -57,7 +60,7 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
 
 setup(
     name="PyNanoCMS",
-    version='0.2.3',
+    version='0.2.4',
     url='https://github.com/rombr/pynano',
     author='Roman Bondar',
     author_email='rombr5@gmail.com',
