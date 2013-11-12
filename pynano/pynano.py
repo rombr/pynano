@@ -42,11 +42,12 @@ STATIC_HTML_DIR = prjpath('site_static/')
 
 class GenHTML(object):
     def __init__(self, template_dir=None, static_html_dir=None,
-                 static_dir=None, other_dir=None):
+                 static_dir=None, other_dir=None, pages=None):
         self.template_dir = os.path.realpath(os.path.dirname(template_dir)) or None
         self.static_dir = os.path.realpath(os.path.dirname(static_dir)) or None
         self.static_html_dir = os.path.realpath(os.path.dirname(static_html_dir)) or None
         self.other_dir = os.path.realpath(os.path.dirname(other_dir)) or None
+        self.pages = pages or None
 
     def render(self, template_path=None, template_string=None, context=None):
         '''
@@ -70,9 +71,9 @@ class GenHTML(object):
         '''
         return self.render(template_string=self.load_template(file_path), context=context)
 
-    def save_HTML_file(self, data, addr):
+    def _get_path_for_page(self, addr):
         '''
-        Save generated HTML
+        Get full path for some URI
         '''
         if addr.startswith('/'): addr = addr[1:]
         if not addr.endswith('.html') and not addr.endswith('/') and len(addr) > 1: addr = addr + '/'
@@ -83,13 +84,21 @@ class GenHTML(object):
             url_path = '/'.join(addr.split('/')[:-1])
         full_path = os.path.realpath(os.path.join(self.static_html_dir, url_path))
 
-        if not os.path.exists(full_path):
-            os.makedirs(full_path)
-
         if addr.endswith('/') or not addr:
             full_file_path = os.path.realpath(os.path.join(full_path, 'index.html'))
         else:
             full_file_path = os.path.realpath(os.path.join(full_path, addr.split('/')[-1]))
+
+        return full_path, full_file_path
+
+    def save_HTML_file(self, data, addr):
+        '''
+        Save generated HTML
+        '''
+        full_path, full_file_path = self._get_path_for_page(addr)
+
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
 
         try:
             file_content = open(full_file_path, 'r').read()
@@ -116,7 +125,7 @@ class GenHTML(object):
         '''
         Common entry point
         '''
-        pages = pages or []
+        pages = pages or self.pages or []
         urls = [(i['page_id'], i['url'],) for i in pages]
         urls = dict(urls)
         for page in pages:
@@ -124,6 +133,34 @@ class GenHTML(object):
             context.update(urls=urls)
             data = self.render(page.get('template', ''), context=context)
             self.save_HTML_file(data, page.get('url', ''))
+
+    def _all_dir_files(self, path):
+        all_files = set()
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                all_files.add(os.path.join(root, file).split(path)[1])
+        return all_files
+
+    def _all_pages_files(self):
+        all_files = set()
+        pages = self.pages or []
+        urls = [i.get('url') for i in pages]
+
+        for url in urls:
+            dir_path, file_path = self._get_path_for_page(url)
+            all_files.add(file_path.split(self.static_html_dir)[1])
+        return all_files
+
+    def clean(self):
+        '''
+        Remove trash in static
+        '''
+        other = self._all_dir_files(self.other_dir)
+        static = self._all_dir_files(self.static_dir)
+        pages_files = self._all_pages_files()
+        static_site = self._all_dir_files(self.static_html_dir)
+
+        trash = static_site - (other | static | pages_files)
 
 
 class GenHTMLJinja2(GenHTML):
@@ -151,18 +188,20 @@ def generate():
         if not TEMPLATE_DIR and not STATIC_HTML_DIR:
             raise Exception('Need TEMPLATE_DIR and STATIC_HTML_DIR')
 
+        pages = json.load(open(PAGES_JSON, 'r'))
+
         gen_html = GenHTMLJinja2(
             template_dir=TEMPLATE_DIR + '/',
             static_html_dir=STATIC_HTML_DIR + '/',
             static_dir=STATIC_DIR + '/',
-            other_dir=OTHER_DIR + '/'
+            other_dir=OTHER_DIR + '/',
+            pages=pages,
         )
 
-        pages = json.load(open(PAGES_JSON, 'r'))
-
-        gen_html.generate(pages)
+        gen_html.generate()
         gen_html.copy_static()
         gen_html.copy_other()
+        gen_html.clean()
     except Exception as e:
         logger.error(e, exc_info=1, extra={})
 
