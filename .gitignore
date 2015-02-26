@@ -40,3 +40,7 @@ MANIFEST
 site_static
 env
 *.log
+*.build
+*.sublime-project
+*.sublime-workspace
+pynano.exe

@@ -4,7 +4,6 @@
 Generate static HTML
 '''
 import os
-import sys
 import subprocess
 import time
 import logging
@@ -21,7 +20,9 @@ from jinja2 import Environment, FileSystemLoader, Template
 logger = logging.getLogger('pyNanoCMS')
 handler = logging.StreamHandler()
 file_handler = logging.FileHandler('pynano.log', 'w')
-formatter = logging.Formatter("%(asctime)s ::%(name)s::%(levelname)s:: %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s ::%(name)s::%(levelname)s:: %(message)s"
+)
 handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 logger.addHandler(handler)
@@ -29,8 +30,12 @@ logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
 
 
-PROJECT_ROOT = os.path.realpath(os.path.dirname('.'))  # __file__))
-prjpath = lambda * args: os.path.realpath(os.path.join(PROJECT_ROOT, *args))
+PROJECT_ROOT = os.path.realpath(os.path.dirname('.'))
+
+
+def prjpath(*args):
+    return os.path.realpath(os.path.join(PROJECT_ROOT, *args))
+
 
 TEMPLATE_DIR = prjpath('templates/')
 STATIC_DIR = prjpath('static/')
@@ -45,9 +50,11 @@ class GenHTML(object):
 
     def __init__(self, template_dir=None, static_html_dir=None,
                  static_dir=None, other_dir=None, pages=None):
-        self.template_dir = os.path.realpath(os.path.dirname(template_dir)) or None
+        self.template_dir = os.path.realpath(
+            os.path.dirname(template_dir)) or None
         self.static_dir = os.path.realpath(os.path.dirname(static_dir)) or None
-        self.static_html_dir = os.path.realpath(os.path.dirname(static_html_dir)) or None
+        self.static_html_dir = os.path.realpath(
+            os.path.dirname(static_html_dir)) or None
         self.other_dir = os.path.realpath(os.path.dirname(other_dir)) or None
         self.pages = pages or None
 
@@ -55,7 +62,7 @@ class GenHTML(object):
         '''
         render page with templates
         '''
-        raise  NotImplementedError()
+        raise NotImplementedError()
 
     def load_template(self, path):
         '''
@@ -71,7 +78,8 @@ class GenHTML(object):
         '''
         Render template
         '''
-        return self.render(template_string=self.load_template(file_path), context=context)
+        return self.render(
+            template_string=self.load_template(file_path), context=context)
 
     def _get_path_for_page(self, addr):
         '''
@@ -91,12 +99,15 @@ class GenHTML(object):
         else:
             url_path = '/'.join(addr.split('/')[:-1])
 
-        full_path = os.path.realpath(os.path.join(self.static_html_dir, url_path))
+        full_path = os.path.realpath(
+            os.path.join(self.static_html_dir, url_path))
 
         if addr.endswith('/') or not addr:
-            full_file_path = os.path.realpath(os.path.join(full_path, 'index.html'))
+            full_file_path = os.path.realpath(
+                os.path.join(full_path, 'index.html'))
         else:
-            full_file_path = os.path.realpath(os.path.join(full_path, addr.split('/')[-1]))
+            full_file_path = os.path.realpath(
+                os.path.join(full_path, addr.split('/')[-1]))
 
         return full_path, full_file_path
 
@@ -111,7 +122,10 @@ class GenHTML(object):
 
         try:
             file_content = open(full_file_path, 'r').read()
-            if md5(file_content).hexdigest() != md5(data.encode("UTF-8")).hexdigest():
+            if (
+                    md5(file_content).hexdigest()
+                    !=
+                    md5(data.encode("UTF-8")).hexdigest()):
                 open(full_file_path, 'w').write(data.encode("UTF-8"))
         except IOError:
             open(full_file_path, 'w').write(data.encode("UTF-8"))
@@ -125,7 +139,8 @@ class GenHTML(object):
     def copy_static(self, dir=None):
         dir = dir or self.static_dir
         static_url = self.static_url
-        self._copy_dir(dir, os.path.realpath(os.path.join(self.static_html_dir, static_url)))
+        self._copy_dir(dir, os.path.realpath(
+            os.path.join(self.static_html_dir, static_url)))
 
     def copy_other(self, dir=None):
         dir = dir or self.other_dir
@@ -150,7 +165,11 @@ class GenHTML(object):
             for file in files:
                 file_path = os.path.join(root, file).split(path)[1]
                 if prefix_dir is not None:
-                    file_path = file_path[:1] + os.path.join(prefix_dir, file_path[1:])
+                    file_path = (
+                        file_path[:1]
+                        +
+                        os.path.join(prefix_dir, file_path[1:])
+                    )
                 all_files.add(file_path)
         return all_files
 
@@ -169,7 +188,8 @@ class GenHTML(object):
         Remove trash in site files
         '''
         other = self._all_dir_files(self.other_dir)
-        static = self._all_dir_files(self.static_dir, prefix_dir=self.static_url)
+        static = self._all_dir_files(
+            self.static_dir, prefix_dir=self.static_url)
         pages = self._all_pages_files()
 
         static_site = self._all_dir_files(self.static_html_dir)
@@ -200,7 +220,8 @@ class GenHTMLJinja2(GenHTML):
         if template_string:
             template = Template(template_string)
         elif template_path:
-            jinja2_env = Environment(loader=FileSystemLoader(self.template_dir))
+            jinja2_env = Environment(
+                loader=FileSystemLoader(self.template_dir))
             template = jinja2_env.get_template(template_path)
         else:
             return ''
@@ -260,7 +281,7 @@ def print_stdout(process):
     Print outs of process
     '''
     stdout = process.stdout
-    if stdout != None:
+    if stdout is not None:
         print stdout
 
 
@@ -305,8 +326,6 @@ if __name__ == "__main__":
         os.chdir(STATIC_HTML_DIR)
         autoreload('python -m SimpleHTTPServer 8000',
                    PROJECT_ROOT, STATIC_HTML_DIR)
-
-
     else:
         logger.info('Generating site...')
         generate()

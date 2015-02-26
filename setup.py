@@ -17,6 +17,7 @@ except ImportError:
 from distutils.command.install import INSTALL_SCHEMES
 import os
 
+
 def fullsplit(path, result=None):
     """
 Split a pathname into components (the opposite of os.path.join) in a
@@ -56,7 +57,9 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
     if '__init__.py' in filenames:
         packages.append('.'.join(fullsplit(dirpath)))
     elif filenames:
-        data_files.append([dirpath, [os.path.join(dirpath, f) for f in filenames]])
+        data_files.append(
+            [dirpath, [os.path.join(dirpath, f) for f in filenames]]
+        )
 
 setup(
     name="PyNanoCMS",
@@ -79,5 +82,5 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Internet :: WWW/HTTP',
-   ],
+    ],
 )
