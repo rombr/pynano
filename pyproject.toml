@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "PyNanoCMS"
+version = "0.4.0"
+description = "Static site generator"
+authors = ["Roman Bondar <rombr5@gmail.com>"]
+license = "BSD"
+readme = "README.md"
+homepage = "https://github.com/rombr/pynano"
+keywords = ["HTTP", "static site generator"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP",
+]
+
+packages = [
+    { include = "pynano" },
+#    { include = "extra_package/**/*.py" },
+]
+
+[tool.poetry.scripts]
+pynano = "pynano.pynano"
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+Jinja2 = "*"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

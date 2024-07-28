@@ -1,4 +1,4 @@
-include README.rst
+include README.md
 include MANIFEST.in
 recursive-exclude * __pycache__
 recursive-exclude * env/
