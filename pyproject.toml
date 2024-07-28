@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "PyNanoCMS"
-version = "0.4.0"
+version = "0.4.1"
 description = "Static site generator"
 authors = ["Roman Bondar <rombr5@gmail.com>"]
-license = "BSD"
+license = "BSD-3-Clause"
 readme = "README.md"
 homepage = "https://github.com/rombr/pynano"
 keywords = ["HTTP", "static site generator"]
