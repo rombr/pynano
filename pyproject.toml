@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PyNanoCMS"
-version = "0.4.1"
+version = "0.4.2"
 description = "Static site generator"
 authors = ["Roman Bondar <rombr5@gmail.com>"]
 license = "BSD-3-Clause"
@@ -20,7 +20,7 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-pynano = "pynano.pynano"
+pynano = "pynano.pynano:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9"

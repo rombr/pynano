@@ -309,7 +309,7 @@ def autoreload(command, monitoring_path, static_html_dir):
         logger.info("Exit...")
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--serve", help="serve in real time", action="store_true")
     args = parser.parse_args()
@@ -323,3 +323,7 @@ if __name__ == "__main__":
     else:
         logger.info("Generating site...")
         generate()
+
+
+if __name__ == "__main__":
+    main()
