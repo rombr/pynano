@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PyNanoCMS"
-version = "0.4.2"
+version = "0.4.3"
 description = "Static site generator"
 authors = ["Roman Bondar <rombr5@gmail.com>"]
 license = "BSD-3-Clause"
@@ -16,7 +16,6 @@ classifiers = [
 
 packages = [
     { include = "pynano" },
-#    { include = "extra_package/**/*.py" },
 ]
 
 [tool.poetry.scripts]
